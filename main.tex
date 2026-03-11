@@ -1,0 +1,601 @@
+%===============================================================================
+% A Consolidated Overview of
+%  Datasets and Benchmarks
+%  for Machine Learning and Computer Vision
+%===============================================================================
+% v0.1 - 01.03.2026 (current version): init
+%
+% 2026 Tobias Schlosser
+%
+% This manuscript is licensed under the Creative Commons Attribution 4.0
+%  International (CC BY 4.0) license
+%  https://creativecommons.org/licenses/by/4.0/deed
+%===============================================================================
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% documentclass
+
+\documentclass{article}
+
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
+
+
+% usepackages
+
+\usepackage{lmodern, mathtools, microtype, textgreek}
+
+\usepackage[main=english, ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[hyphens]{url}
+\usepackage[colorlinks, citecolor=LimeGreen, pagebackref=true]{hyperref}
+\usepackage[dvipsnames, table]{xcolor}
+
+\usepackage{cite}
+
+% https://ctan.net/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+    \ifnum #3 > 0 {%
+        \ifnum #3 = 1 {%
+            \ifnum #1 = 1 {%
+                \\ (1 citation on 1 page: #2)
+            } \else {%
+                \\ (1 citation on #1 pages: #2)
+            } \fi
+        } \else {%
+            \ifnum #1 = 1 {%
+                \\ (#3 citations on 1 page: #2)
+            } \else {%
+                \\ (#3 citations on #1 pages: #2)
+            } \fi
+        } \fi
+    } \fi
+}
+
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows,
+    backgrounds,
+    calc,
+    decorations,
+    calligraphy,
+    fit,
+    positioning,
+    shapes,
+    spy
+}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer, fillbetween}
+
+\usepackage[hang]{caption}
+
+\usepackage{array, diagbox, float, longtable, makecell, multicol, multirow, subfig, tabularx, xfrac}
+
+\usepackage[export]{adjustbox}
+
+\usepackage[defaultlines=10, all]{nowidow}
+
+\setlength{\parskip}{   1em }
+\setlength{\parindent}{ 0em }
+
+\addtolength{\skip\footins}{1cm}
+
+\renewcommand*{\arraystretch}{1.33}
+
+\linespread{1.1}\selectfont
+
+\newcolumntype{P}[1]{>{ \centering  \arraybackslash }p{#1}}
+\newcolumntype{Q}[1]{>{ \raggedleft \arraybackslash }p{#1}}
+\newcolumntype{M}[1]{>{ \centering  \arraybackslash }m{#1}}
+\newcolumntype{N}[1]{>{ \raggedleft \arraybackslash }m{#1}}
+\newcolumntype{B}[1]{>{ \centering  \arraybackslash }b{#1}}
+\newcolumntype{C}[1]{>{ \raggedleft \arraybackslash }b{#1}}
+
+
+% ORCID
+
+\usepackage{fontawesome5}
+
+% With / without "\thinspace" before "\textsuperscript{...}"
+% \newcommand{\ORCID}[1]{\thinspace\textsuperscript{\href{https://orcid.org/#1}{\textcolor[HTML]{A6CE39}{\faOrcid}}}}
+\newcommand{\ORCID}[1]{\textsuperscript{\href{https://orcid.org/#1}{\textcolor[HTML]{A6CE39}{\faOrcid}}}}
+
+\newcommand{\ORCIDSchlosser}{0000-0002-0682-4284} % ORCID Tobias Schlosser
+
+
+% Page numbering
+\usepackage{fancyhdr, lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyfoot[C]{\thepage/\pageref{LastPage}}}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+
+% Miscellaneous
+
+\usepackage[subfigure]{tocloft}
+
+% "How to write a perfect equation parameters description?"
+% https://tex.stackexchange.com/questions/95838/how-to-write-a-perfect-equation-parameters-description
+\newenvironment{conditions}[1][where:]
+    {\hspace{0.02\textwidth} #1 \begin{tabular}[t]{>{$}l<{$} @{${}={}$} l}}
+    {\end{tabular}\\[\belowdisplayskip]}
+
+
+
+
+% longtable ToC
+
+% \usepackage{hyperref}
+\usepackage{longtable}
+
+\newcounter{type}[section]
+\renewcommand{\thetype}{\thesection.\arabic{type}}
+
+\newcounter{entry}[section]
+\renewcommand{\theentry}{\thesection.\arabic{entry}}
+
+% Type row
+% #1 = title
+\newcommand{\TypeRow}[1]{
+    \noalign{
+        \stepcounter{type}
+        \xdef\TYPENUM{\thetype}
+        \phantomsection\label{type:\TYPENUM}
+        \addcontentsline{toc}{subsection}{\TYPENUM\hspace{0.5cm}#1}
+    }
+    \multicolumn{5}{|c|}{\textbf{\TYPENUM\hspace{0.5cm}#1}} \\
+    \hline
+}
+
+% Entry row
+% #1 = key, #2,#4..#7 = columns, #3 = citation
+\newcommand{\EntryRow}[7]{
+    \noalign{
+        \stepcounter{entry}
+        \xdef\ENTRYNUM{\theentry}
+        \phantomsection\label{entry:#1}
+        \addcontentsline{toc}{subsubsection}{\ENTRYNUM\hspace{0.5cm}#2}
+    }
+    #2 #3 & #4 & #5 & #6 & #7 \\
+    \hline
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\begin{document}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\Huge A Consolidated Overview of \\ Datasets and Benchmarks \\ for Machine Learning and Computer Vision}
+
+\author{
+    Tobias Schlosser\ORCID{\ORCIDSchlosser} \\[1ex]
+    Dresden University of Technology, \\
+    01307 Dresden, Germany, \\
+    \texttt{\{firstname.lastname\}@tu-dresden.de}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\maketitle
+
+
+
+
+\section*{Abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This manuscript provides a consolidated, practitioner-oriented overview of widely used datasets and benchmarks for machine learning (ML) and computer vision (CV). It aims to serve as a compact entry point for selecting suitable benchmarks, understanding typical evaluation settings, and recognizing common dataset characteristics such as modality, scale, and annotation scope. Beyond listing canonical datasets, the manuscript highlights benchmark hubs and repositories that standardize access, splits, and metadata, and it emphasizes how dataset choice influences comparability, reproducibility, and the validity of conclusions. The overview is organized along two broad domains---ML and CV---and covers representative task families including tabular learning, time series, graphs, recommender systems, natural language processing, reinforcement learning, and multiple CV subareas (classification, detection, segmentation, 3D vision, remote sensing, vision--language, and medical imaging). The manuscript is intended as a living reference that supports both newcomers and experienced researchers in rapidly mapping the benchmark landscape and in making transparent, well-motivated dataset selections for experiments and reporting.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\tableofcontents
+
+
+
+
+\clearpage
+
+
+
+
+\section{Introduction and Motivation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Datasets and benchmarks are central to progress in machine learning and computer vision: they operationalize tasks, define evaluation protocols, and enable quantitative comparisons across methods. At the same time, dataset selection is a frequent source of hidden variance in experimental outcomes. Differences in label definitions, sampling strategies, train/validation/test splits, annotation noise, and domain coverage can easily outweigh architectural or optimization improvements. Consequently, responsible empirical work requires more than picking a popular dataset. It requires understanding what a benchmark measures, what it omits, and how its assumptions align with the intended deployment setting.
+
+The benchmark landscape has expanded rapidly, spanning classical tabular problems, modern web-scale corpora for foundation models, specialized medical and scientific datasets, and increasingly multimodal benchmarks. In parallel, dataset access has shifted toward standardized repositories and loaders that facilitate reproducibility through versioning, checksums, and canonical splits. This manuscript consolidates representative datasets and benchmark suites across ML and CV into structured tables that summarize modality, approximate scale, and typical tasks. The goal is not exhaustiveness, but coverage of widely referenced anchors and practical starting points for experiment design, baselining, and reporting.
+
+Throughout the manuscript, the term dataset refers to a curated collection of samples (e.g., images, time series, text, or graphs) with accompanying metadata and often annotations, while benchmark refers to a dataset paired with an evaluation protocol (metrics, splits, constraints, and reporting conventions). The presented overview is meant to be updated over time and to support transparent documentation practices, e.g., explicitly stating dataset versions, preprocessing steps, and evaluation protocols.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\section{Machine Learning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Machine learning benchmarks span a broad range of modalities and task formulations. Classical supervised learning on tabular data remains important for structured prediction in domains such as finance, marketing, and healthcare, while time series benchmarks capture forecasting and anomaly detection challenges under temporal dependencies and seasonality. Graph benchmarks support research on relational reasoning and representation learning for networks, and recommender-system datasets highlight issues such as sparsity, popularity bias, and temporal drift. In natural language processing (NLP), benchmark suites for understanding and question answering (QA) coexist with massive pretraining corpora that fuel modern large language models (LLM), making it important to distinguish evaluation benchmarks from pretraining data sources. Reinforcement learning (RL) benchmarks often come as environment suites or logged trajectories, and their evaluation depends strongly on interaction protocols (online vs. offline RL).
+
+A recurring theme across ML benchmarks is the interplay between data scale, annotation quality, and evaluation stability. Small and well-curated datasets can support controlled comparisons but may saturate quickly or fail to reflect real-world variability. Large-scale datasets improve statistical power but increase the risk of dataset-specific shortcuts, spurious correlations, and untracked distribution shift. Moreover, some benchmarks are primarily historical (useful for continuity) while others are designed to stress robustness, fairness, or out-of-distribution generalization. For transparent reporting, it is good practice to document dataset versions, canonical splits, leakage checks, and any filtering or deduplication steps, especially when benchmarks are accessed via evolving repositories.
+
+Subsequently, the following abbreviations are used:
+
+\begin{multicols}{2}
+    \begin{itemize}\setlength{\itemsep}{0cm}
+        \item ASR = automatic speech recognition
+        \item EHR = electronic health records
+        \item GNN = graph neural network
+        \item HEP = high-energy physics
+        \item ICU = intensive care unit
+        \item IR = information retrieval
+        \item MedImg = medical imaging
+        \item MRI = magnetic resonance imaging
+        \item MT = machine translation
+        \item Multivar = multivariate
+        \item NLP = natural language processing
+        \item QA = question answering
+        \item RL = reinforcement learning
+        \item TSC = time series classification
+    \end{itemize}
+\end{multicols}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.35\textwidth}|}
+    \caption{Machine learning datasets.} \\
+
+
+    \hline
+    \textbf{Dataset} & \textbf{Area} & \textbf{Modality} & \textbf{Scale} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Dataset} & \textbf{Area} & \textbf{Modality} & \textbf{Scale} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{5}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    \TypeRow{Benchmark hubs and repositories}
+    \EntryRow{openml}{OpenML}{\cite{bischl2025openml}}{Tabular}{Mixed}{10k+ tasks}{Benchmarking hub with standardized tasks, splits, and metadata}
+    \EntryRow{huggingface_datasets}{Hugging Face Datasets}{\cite{lhoest2021datasets}}{NLP/Multi}{Mixed}{1000s}{Unified dataset hosting/loader; many tasks and modalities}
+    \EntryRow{tfds}{TensorFlow Datasets (TFDS)}{\cite{abadi2015tensorflow}}{Multi}{Mixed}{100s}{Curated dataset loaders with versioning and checksums}
+    \EntryRow{kaggle}{Kaggle Datasets}{\cite{goldbloom2010data}}{Multi}{Mixed}{100k+}{Community datasets; quality varies; good for rapid prototyping}
+
+    \TypeRow{Tabular ML (classical supervised learning)}
+    \EntryRow{uci}{UCI ML Repository}{\cite{asuncion2007uci}}{Tabular}{Tabular}{100s}{Classic ML datasets; heterogeneous difficulty and documentation}
+    \EntryRow{adult}{Adult (Census Income)}{\cite{kohavi1996scaling}}{Tabular}{Tabular}{48k}{Binary classification; fairness discussions common}
+    \EntryRow{bank_marketing}{Bank Marketing}{\cite{moro2014data}}{Tabular}{Tabular}{45k}{Marketing response prediction; imbalanced classification}
+    \EntryRow{higgs}{HIGGS}{\cite{baldi2014searching}}{Tabular}{Tabular}{11M}{Large-scale binary classification; HEP-inspired}
+    \EntryRow{credit_card_fraud}{Credit Card Fraud (EU)}{\cite{dal2015calibrating}}{Tabular}{Tabular}{285k}{Highly imbalanced anomaly/fraud detection}
+
+    \TypeRow{Time series and forecasting}
+    \EntryRow{ucr}{UCR Time Series Classification Archive}{\cite{dau2019ucr}}{Time series}{1D}{100+ sets}{Univariate time series classification benchmarks}
+    \EntryRow{uea2018}{UEA Multivariate TSC Archive (2018)}{\cite{bagnall2018uea}}{Time series}{Multivar}{30+ sets}{Multivariate time series classification benchmarks}
+    \EntryRow{m4}{M4}{\cite{makridakis2020m4}}{Forecast}{Time series}{100k series}{Large forecasting competition dataset}
+    \EntryRow{m5}{M5}{\cite{makridakis2022m5}}{Forecast}{Time series}{Walmart}{Retail demand forecasting; hierarchical aggregation}
+    \EntryRow{etth}{ETTh/ETTm}{\cite{zhou2021informer}}{Forecast}{Time series}{2 years}{Transformer time series benchmarks (ETT family)}
+
+    \TypeRow{Anomaly detection (general)}
+    \EntryRow{unsw_nb15}{UNSW-NB15}{\cite{moustafa2015unsw}}{Anomaly}{Tabular}{2.5M}{Modern intrusion detection benchmark alternative}
+    \EntryRow{nab}{Numenta Anomaly Benchmark (NAB)}{\cite{lavin2015evaluating}}{Anomaly}{Time series}{58 files}{Streaming anomaly detection with labeled windows}
+
+    \TypeRow{Graph machine learning}
+    \EntryRow{ogb}{Open Graph Benchmark (OGB)}{\cite{hu2020open}}{Graphs}{Graph}{Many}{Standardized graph benchmarks and evaluation protocols}
+    \EntryRow{cora}{Cora}{\cite{mccallum2000automating}}{Graphs}{Citation graph}{2.7k nodes}{Node classification; classic GNN benchmark}
+    \EntryRow{citeseer}{CiteSeer}{\cite{yang2016revisiting}}{Graphs}{Citation graph}{3.3k nodes}{Node classification; classic benchmark}
+    \EntryRow{reddit_graph}{Reddit (Graph)}{\cite{hamilton2017inductive}}{Graphs}{Graph}{232k nodes}{Inductive node classification; community graphs}
+
+    \TypeRow{Recommender systems}
+    \EntryRow{movielens}{MovieLens}{\cite{harper2015movielens}}{Recsys}{Ratings}{Various}{Collaborative filtering; multiple sizes/versions}
+    \EntryRow{amazon_reviews}{Amazon Reviews}{\cite{mcauley2013hidden}}{Recsys/NLP}{Text+ratings}{Large}{Review-based recommendation; domain shift across categories}
+
+    \TypeRow{NLP benchmarks (understanding, QA, IE)}
+    \EntryRow{glue}{GLUE}{\cite{wang2018glue}}{NLP}{Text}{9 tasks}{General language understanding evaluation suite}
+    \EntryRow{superglue}{SuperGLUE}{\cite{wang2019superglue}}{NLP}{Text}{8 tasks}{Harder successor to GLUE}
+    \EntryRow{squad}{SQuAD}{\cite{rajpurkar2016squad}}{NLP}{Text}{100k+ QAs}{Reading comprehension / extractive QA}
+    \EntryRow{msmarco}{MS MARCO}{\cite{bajaj2016ms}}{IR/QA}{Text}{Large}{Passage ranking, retrieval, QA-style supervision}
+    \EntryRow{ontonotes}{OntoNotes 5.0}{\cite{weischedel2022ontonotes}}{NLP}{Text}{Large}{NER, coreference; richer annotation}
+    \EntryRow{xnli}{XNLI}{\cite{conneau2018xnli}}{NLP}{Text}{15 langs}{Cross-lingual NLI benchmark}
+    \EntryRow{tydiqa}{TyDi QA}{\cite{clark2020tydi}}{NLP}{Text}{11 langs}{Multilingual QA across typologically diverse languages}
+
+    \TypeRow{NLP pretraining corpora}
+    \EntryRow{c4}{C4}{\cite{raffel2020exploring}}{NLP}{Text}{Large}{Cleaned Common Crawl; popular for transformer pretraining}
+    \EntryRow{pile}{The Pile}{\cite{gao2020pile}}{NLP}{Text}{800GB}{Curated mixture for LLM pretraining}
+    \EntryRow{bookcorpus}{BookCorpus}{\cite{zhu2015aligning}}{NLP}{Text}{Large}{Books; used in early transformer pretraining}
+
+    \TypeRow{Machine translation and multilingual corpora}
+    \EntryRow{opus}{OPUS}{\cite{tiedemann2016opus}}{MT}{Text}{Large}{Open parallel corpora collection; many domains/languages}
+    \EntryRow{flores200}{FLORES-200}{\cite{costa2022no}}{MT/NLP}{Text}{200 langs}{Many-to-many MT evaluation benchmark}
+
+    \TypeRow{Speech and audio}
+    \EntryRow{librispeech}{LibriSpeech}{\cite{panayotov2015librispeech}}{Speech}{Audio}{1000h}{ASR benchmark (audiobooks)}
+    \EntryRow{commonvoice}{Common Voice}{\cite{ardila2020common}}{Speech}{Audio}{Large}{Multilingual ASR; community-recorded, noisy conditions}
+    \EntryRow{audioset}{AudioSet}{\cite{gemmeke2017audio}}{Audio}{Audio}{2M clips}{Audio event classification with ontology-based labels}
+    \EntryRow{voxceleb}{VoxCeleb}{\cite{nagrani2017voxceleb}}{Speech}{Audio/Video}{Large}{Speaker verification/identification in the wild}
+
+    \TypeRow{Reinforcement learning (environments and offline RL)}
+    \EntryRow{ale}{Arcade Learning Environment (ALE)}{\cite{bellemare2013arcade}}{RL}{Games}{57 games}{Atari-style RL benchmark suite}
+    \EntryRow{d4rl}{D4RL}{\cite{fu2020d4rl}}{RL}{Trajectories}{Many}{Offline RL datasets + standardized evaluation}
+    \EntryRow{dmcontrol}{DeepMind Control Suite}{\cite{tassa2018deepmind}}{RL}{Sim}{Many tasks}{Continuous control benchmarks}
+    \EntryRow{mujoco}{MuJoCo Benchmarks}{\cite{todorov2012mujoco}}{RL}{Sim}{Many tasks}{Locomotion/manipulation; common in policy learning}
+
+    \TypeRow{Healthcare / EHR and clinical prediction}
+    \EntryRow{mimiciii}{MIMIC-III}{\cite{johnson2016mimic}}{EHR}{Structured + notes}{Large}{ICU EHR benchmark; many clinical prediction tasks}
+    \EntryRow{mimiciv}{MIMIC-IV}{\cite{johnson2023mimic}}{EHR}{Structured + notes}{Large}{Newer ICU EHR release}
+    \EntryRow{eicu}{eICU Collaborative Research Database}{\cite{pollard2018eicu}}{EHR}{Structured}{Large}{Multi-center ICU EHR; diagnosis/outcome prediction}
+
+    \TypeRow{Medical imaging (ML-relevant benchmarks)}
+    \EntryRow{nihcxr14}{NIH ChestX-ray14}{\cite{wang2017chestx}}{MedImg}{X-ray}{112k}{Multi-label thoracic disease classification}
+    \EntryRow{chexpert}{CheXpert}{\cite{irvin2019chexpert}}{MedImg}{X-ray}{224k}{Chest radiograph labels; uncertain labels handling}
+    \EntryRow{mimic_cxr}{MIMIC-CXR}{\cite{johnson2019mimic}}{MedImg}{X-ray}{370k}{Large chest X-ray + reports; multimodal learning}
+    \EntryRow{brats}{BraTS}{\cite{menze2014multimodal}}{MedImg}{MRI}{2k+}{Brain tumor segmentation benchmark}
+
+    \TypeRow{Fairness, robustness, and shift evaluation}
+    \EntryRow{waterbirds}{Waterbirds}{\cite{sagawa2019distributionally}}{Robust}{Images}{\textasciitilde 10k}{Spurious correlation benchmark (background vs. label)}
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\section{Computer Vision}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Computer vision benchmarks are typically organized by task families such as classification, object detection, segmentation, tracking, and 3D perception. While early datasets were relatively small and curated, modern CV research increasingly relies on large-scale, diverse datasets and on standardized evaluation protocols (e.g., mean average precision for detection, intersection-over-union for segmentation, or benchmark-specific leaderboards). The community also distinguishes between datasets intended for supervised evaluation and datasets primarily used for representation learning or pretraining. In addition, multimodal vision--language datasets have become prominent as foundation models blur the boundary between CV and NLP, introducing new concerns around web-scale collection, noise, and licensing constraints.
+
+Choosing a CV benchmark requires attention to label taxonomies, annotation granularity (image-level labels vs. instance masks vs. panoptic labels), domain coverage (e.g., consumer photos, autonomous driving, or medical imaging), and the expected generalization regime. Many datasets embed biases---for instance, long-tail class frequency, geographic or demographic skew, or dataset-specific artifacts---that can lead to brittle improvements. Robustness-oriented benchmarks explicitly probe such failure modes via distribution shift, adversarial filtering, or domain transfer (e.g., renditions, sketches, or stylized images). For practical experimentation, it is also crucial to report preprocessing (e.g., image resolution and augmentation), evaluation details (e.g., IoU thresholds or per-class averaging), and any additional supervision (e.g., external pretraining), as these strongly affect comparability.
+
+Subsequently, the following abbreviations are used:
+
+\begin{multicols}{2}
+    \begin{itemize}\setlength{\itemsep}{0cm}
+        \item Ann = annotations
+        \item Cls = classification
+        \item CT = computed tomography
+        \item CV = computer vision
+        \item Det = (object) detection
+        \item FaceAttr = face attribute recognition
+        \item FaceDet = face detection
+        \item FaceID = face identification/verification
+        \item Flow = optical flow
+        \item Gen = generative modeling
+        \item InstSeg = instance segmentation
+        \item LiDAR = light detection and ranging
+        \item MedCV = medical computer vision
+        \item MOT = multi-object tracking
+        \item MRI = magnetic resonance imaging
+        \item Panoptic = panoptic segmentation
+        \item Pose = (2D) pose estimation
+        \item Pose3D = 3D pose estimation
+        \item RGB-D = color + depth
+        \item SemSeg = semantic segmentation
+        \item SR = super-resolution
+        \item V+L = vision--language
+        \item VidSeg = video segmentation
+    \end{itemize}
+\end{multicols}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.35\textwidth}|}
+    \caption{Computer vision datasets.} \\
+
+
+    \hline
+    \textbf{Dataset} & \textbf{Area} & \textbf{Modality} & \textbf{Scale} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Dataset} & \textbf{Area} & \textbf{Modality} & \textbf{Scale} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{5}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    \TypeRow{Image classification (general)}
+    \EntryRow{mnist}{MNIST}{\cite{lecun2002gradient}}{Cls}{Images}{70k}{Handwritten digits; classic baseline}
+    \EntryRow{fashionmnist_cv}{Fashion-MNIST}{\cite{xiao2017fashion}}{Cls}{Images}{70k}{Apparel classification; MNIST-style}
+    \EntryRow{cifar}{CIFAR-10/100}{\cite{krizhevsky2009learning}}{Cls}{Images}{60k}{Small natural images benchmark}
+    \EntryRow{svhn_cv}{SVHN}{\cite{netzer2011reading}}{Cls}{Images}{600k}{Street numbers; digit recognition}
+    \EntryRow{imagenet}{ImageNet}{\cite{deng2009imagenet}}{Cls}{Images}{14M+}{Large-scale classification; pretraining cornerstone}
+    \EntryRow{imagenet21k}{ImageNet-21k}{\cite{ridnik2021imagenet}}{Cls}{Images}{14M+}{Larger label space; used for pretraining}
+
+    \TypeRow{Fine-grained recognition}
+    \EntryRow{cub200}{CUB-200-2011}{\cite{wah2011caltech}}{Fine-grained}{Images}{11k}{Bird species classification with part annotations}
+    \EntryRow{stanford_cars}{Stanford Cars}{\cite{krause20133d}}{Fine-grained}{Images}{16k}{Car model classification}
+    \EntryRow{fgvc_aircraft}{FGVC Aircraft}{\cite{maji2013fine}}{Fine-grained}{Images}{10k}{Aircraft variant classification}
+    \EntryRow{inat}{iNaturalist}{\cite{van2018inaturalist}}{Fine-grained}{Images}{Large}{Long-tail species recognition}
+
+    \TypeRow{Object detection}
+    \EntryRow{voc}{PASCAL VOC}{\cite{everingham2010pascal}}{Det}{Images}{20 classes}{Classic detection benchmark}
+    \EntryRow{coco}{MS COCO}{\cite{lin2014microsoft}}{Det}{Images}{330k}{Detection + segmentation + keypoints}
+    \EntryRow{openimages}{Open Images}{\cite{kuznetsova2020open}}{Det}{Images}{9M+}{Large-scale detection with many classes}
+    \EntryRow{objects365}{Objects365}{\cite{shao2019objects365}}{Det}{Images}{2M}{Large-scale object detection for diverse categories}
+
+    \TypeRow{Instance segmentation}
+    \EntryRow{coco_inst}{COCO (Instance Segmentation)}{\cite{lin2014microsoft}}{InstSeg}{Images}{330k}{Instance masks; common baseline}
+    \EntryRow{lvis}{LVIS}{\cite{gupta2019lvis}}{InstSeg}{Images}{1000+ cls}{Long-tail instance segmentation}
+    \EntryRow{ade20k_inst}{ADE20K (parts/instances)}{\cite{zhou2017scene}}{InstSeg}{Images}{25k+}{Scene parsing with richer label structure}
+
+    \TypeRow{Semantic segmentation}
+    \EntryRow{ade20k}{ADE20K}{\cite{zhou2017scene}}{SemSeg}{Images}{25k+}{Scene parsing / dense semantic labels}
+    \EntryRow{cityscapes}{Cityscapes}{\cite{cordts2016cityscapes}}{SemSeg}{Images}{5k fine}{Urban driving scenes; strong benchmark}
+    \EntryRow{pascal_context}{PASCAL-Context}{\cite{mottaghi2014role}}{SemSeg}{Images}{10k}{Dense labels derived from PASCAL}
+    \EntryRow{cocostuff}{COCO-Stuff}{\cite{caesar2018coco}}{SemSeg}{Images}{164k}{Stuff + thing labels; semantic segmentation}
+
+    \TypeRow{Human pose estimation and keypoints}
+    \EntryRow{mpii}{MPII Human Pose}{\cite{andriluka20142d}}{Pose}{Images}{25k+}{2D pose estimation benchmark}
+    \EntryRow{coco_keypoints}{COCO Keypoints}{\cite{lin2014microsoft}}{Pose}{Images}{330k}{Keypoint detection; standard evaluation}
+    \EntryRow{human36m}{Human3.6M}{\cite{ionescu2013human3}}{Pose3D}{Video+3D}{Large}{3D pose / mocap benchmark}
+    \EntryRow{posetrack}{PoseTrack}{\cite{andriluka2018posetrack}}{Pose}{Video}{Large}{Pose tracking in videos}
+
+    \TypeRow{Face analysis}
+    \EntryRow{widerface}{WIDER FACE}{\cite{yang2016wider}}{FaceDet}{Images}{32k}{Face detection in the wild}
+    \EntryRow{celeba}{CelebA}{\cite{liu2015deep}}{FaceAttr}{Images}{200k}{Face attributes and identities}
+    \EntryRow{lfw}{LFW}{\cite{huang2008labeled}}{FaceID}{Images}{13k}{Face verification; legacy benchmark}
+    \EntryRow{ffhq}{FFHQ}{\cite{karras2019style}}{Faces}{Images}{70k}{High-quality face images; generation and restoration}
+
+    \TypeRow{Tracking and MOT}
+    \EntryRow{mot17}{MOT17}{\cite{dendorfer2021motchallenge}}{Tracking}{Video}{\textasciitilde 7 seq}{Multi-object tracking benchmark}
+    \EntryRow{mot20}{MOT20}{\cite{dendorfer2020mot20}}{Tracking}{Video}{\textasciitilde 4 seq}{Crowded multi-object tracking}
+    \EntryRow{lasot}{LaSOT}{\cite{fan2019lasot}}{Tracking}{Video}{1.4k}{Single object long-term tracking}
+
+    \TypeRow{Video action recognition}
+    \EntryRow{kinetics}{Kinetics}{\cite{kay2017kinetics}}{Action}{Video}{Hundreds k}{Human action recognition benchmark}
+    \EntryRow{hmdb51}{HMDB51}{\cite{kuehne2011hmdb}}{Action}{Video}{7k}{Action recognition; smaller benchmark}
+    \EntryRow{ucf101}{UCF101}{\cite{soomro2012ucf101}}{Action}{Video}{13k}{Action recognition; classic dataset}
+    \EntryRow{something}{Something-Something V2}{\cite{goyal2017something}}{Action}{Video}{220k}{Fine-grained human-object interaction actions}
+
+    \TypeRow{Video segmentation}
+    \EntryRow{davis}{DAVIS}{\cite{perazzi2016benchmark}}{VidSeg}{Video}{Small}{Video object segmentation benchmark}
+    \EntryRow{ytvos}{YouTube-VOS}{\cite{xu2018youtube}}{VidSeg}{Video}{Large}{Large-scale video object segmentation}
+
+    \TypeRow{Optical flow and correspondence}
+    \EntryRow{middlebury_flow}{Middlebury Flow}{\cite{baker2011database}}{Flow}{Pairs}{Small}{Classic optical flow evaluation}
+    \EntryRow{sintel}{MPI-Sintel}{\cite{butler2012naturalistic}}{Flow}{Video}{Large}{Synthetic optical flow benchmark with ground truth}
+    \EntryRow{flyingchairs}{FlyingChairs}{\cite{dosovitskiy2015flownet}}{Flow}{Pairs}{22k}{Synthetic flow training dataset}
+    \EntryRow{flyingthings}{FlyingThings3D}{\cite{mayer2016large}}{Flow}{3D}{Large}{Synthetic flow + disparity; training for correspondence}
+
+    \TypeRow{Stereo and depth estimation}
+    \EntryRow{kitti}{KITTI}{\cite{geiger2013vision}}{Depth}{RGB+LiDAR}{Large}{Stereo, flow, odometry, 3D detection}
+    \EntryRow{kitti_depth}{KITTI Depth}{\cite{uhrig2017sparsity}}{Depth}{RGB+LiDAR}{Large}{Depth completion/estimation tasks}
+    \EntryRow{nyudv2}{NYU Depth v2}{\cite{silberman2012indoor}}{RGB-D}{RGB-D}{Small}{Indoor RGB-D; depth + semantics}
+    \EntryRow{sunrgbd}{SUN RGB-D}{\cite{song2015sun}}{RGB-D}{RGB-D}{10k}{Indoor scene understanding with depth}
+
+    \TypeRow{Autonomous driving (large-scale)}
+    \EntryRow{bdd100k}{BDD100K}{\cite{yu2020bdd100k}}{Drive}{Video}{100k}{Driving video: detection, lane, segmentation}
+    \EntryRow{waymo}{Waymo Open Dataset}{\cite{sun2020scalability}}{Drive}{Multi-sensor}{Large}{3D detection/tracking from LiDAR + cameras}
+    \EntryRow{nuscenes}{nuScenes}{\cite{caesar2020nuscenes}}{Drive}{Multi-sensor}{1k scenes}{360-degree multi-sensor perception benchmark}
+
+    \TypeRow{3D vision (scans, reconstruction, point clouds)}
+    \EntryRow{scannet}{ScanNet}{\cite{dai2017scannet}}{3D}{RGB-D}{Large}{3D reconstruction + semantic labels}
+    \EntryRow{shapenet}{ShapeNet}{\cite{chang2015shapenet}}{3D}{Meshes}{Large}{3D models for representation learning}
+    \EntryRow{modelnet40}{ModelNet40}{\cite{wu20153d}}{3D}{CAD}{12k}{3D shape classification baseline}
+    \EntryRow{s3dis}{S3DIS}{\cite{armeni20163d}}{3D}{Point cloud}{Large}{Indoor 3D semantic segmentation}
+
+    \TypeRow{Remote sensing and aerial imagery}
+    \EntryRow{dota}{DOTA}{\cite{xia2018dota}}{Remote}{Aerial}{Large}{Oriented object detection in aerial images}
+    \EntryRow{xview}{xView}{\cite{lam2018xview}}{Remote}{Aerial}{1M objs}{Large-scale overhead object detection}
+    \EntryRow{deepglobe}{DeepGlobe}{\cite{demir2018deepglobe}}{Remote}{Aerial}{Large}{Road/building segmentation challenges}
+
+    \TypeRow{Document AI / OCR}
+    \EntryRow{iam}{IAM Handwriting}{\cite{marti1999full}}{DocAI}{Scans}{Large}{Handwriting recognition}
+    \EntryRow{pubtabnet}{PubTabNet}{\cite{zhong2020image}}{DocAI}{Scans}{500k}{Table structure recognition}
+
+    \TypeRow{Vision--language (image--text)}
+    \EntryRow{visualgenome}{Visual Genome}{\cite{krishna2017visual}}{V+L}{Images+Ann}{108k}{Objects/attributes/relations; region descriptions}
+    \EntryRow{vqa}{VQA}{\cite{antol2015vqa}}{V+L}{Images+QA}{Large}{Visual question answering benchmark}
+    \EntryRow{cc3m}{Conceptual Captions (CC3M)}{\cite{sharma2018conceptual}}{V+L}{Image-Text}{3M}{Caption pairs for multimodal pretraining}
+    \EntryRow{cc12m}{Conceptual Captions (CC12M)}{\cite{changpinyo2021conceptual}}{V+L}{Image-Text}{12M}{Larger caption dataset}
+    \EntryRow{flickr30k}{Flickr30k}{\cite{young2014image}}{V+L}{Image-Text}{31k}{Image captioning + retrieval}
+    \EntryRow{msr_vtt}{MSR-VTT}{\cite{xu2016msr}}{V+L}{Video-Text}{10k}{Video captioning / retrieval}
+    \EntryRow{laion5b}{LAION-5B}{\cite{schuhmann2022laion}}{V+L}{Image-Text}{5B}{Web-scale image-text pairs; foundation-model pretraining}
+
+    \TypeRow{Generative modeling and super-resolution}
+    \EntryRow{celeba_hq}{CelebA-HQ}{\cite{karras2017progressive}}{Gen}{Images}{30k}{High-quality faces for GANs}
+    \EntryRow{div2k}{DIV2K}{\cite{agustsson2017ntire}}{SR}{Images}{2k}{Super-resolution benchmark}
+    \EntryRow{ffhq_gen}{FFHQ}{\cite{karras2019style}}{Gen}{Images}{70k}{High-quality face dataset for generation and editing}
+
+    \TypeRow{Robustness and distribution shift}
+    \EntryRow{imagenet_a}{ImageNet-A}{\cite{hendrycks2021natural}}{Robust}{Images}{7.5k}{Adversarially filtered natural images}
+    \EntryRow{imagenet_r}{ImageNet-R}{\cite{hendrycks2021many}}{Robust}{Images}{30k}{Renditions (art, cartoons); domain shift}
+    \EntryRow{imagenet_sketch}{ImageNet-Sketch}{\cite{wang2019learning}}{Robust}{Images}{50k}{Sketch domain shift evaluation}
+    \EntryRow{stylized_imagenet}{Stylized-ImageNet}{\cite{geirhos2018imagenet}}{Robust}{Images}{Large}{Style transfer augmentation; texture/shape bias studies}
+
+    \TypeRow{Medical imaging (CV-specific)}
+    \EntryRow{brats_cv}{BraTS}{\cite{menze2014multimodal}}{MedCV}{MRI}{2k+}{Brain tumor segmentation benchmark}
+    \EntryRow{luna16}{LUNA16}{\cite{setio2017validation}}{MedCV}{CT}{888}{Lung nodule detection benchmark}
+    \EntryRow{drive}{DRIVE}{\cite{staal2004ridge}}{MedCV}{Fundus}{40}{Retinal vessel segmentation (classic)}
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\section{Conclusion and Outlook}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This manuscript consolidates a representative set of datasets and benchmarks for machine learning and computer vision, with an emphasis on practical descriptors (modality, approximate scale, and typical tasks) and on benchmark hubs that standardize access and evaluation. The resulting overview can support rapid benchmarking, baseline selection, and clearer reporting by providing a shared map of commonly referenced datasets across subfields ranging from tabular learning and time series to vision--language and medical imaging. Importantly, the tables should be interpreted as entry points rather than prescriptions. The most appropriate benchmark depends on the intended deployment context, the available supervision, and the desired generalization regime.
+
+Looking ahead, several trends are likely to shape benchmark practice. First, evaluation will increasingly combine multiple axes (accuracy, calibration, fairness, robustness, efficiency, and energy/cost) rather than focusing on a single metric. Second, multimodal and foundation-model evaluation will require more careful separation of pretraining sources and downstream benchmarks, including explicit tracking of contamination and deduplication. Third, dataset documentation and governance (licensing, consent, provenance, and privacy constraints) will become more prominent, especially for web-scale and healthcare data. Finally, living benchmark repositories and community-maintained leaderboards will continue to evolve, making dataset versioning and reproducible pipelines essential for credible comparisons. This overview is therefore intended to be updated over time and to encourage transparent, well-documented benchmark selection and reporting.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{library}
+
+
+
+
+\end{document}
+
